@@ -8,10 +8,9 @@ class GildedRose(object):
     def update_quality(self):
         for item in self.items:
             multiplier = 11
-            if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert":
-                if item.name != "Sulfuras, Hand of Ragnaros":
-                    if item.quality > 0:
-                        item.quality -= 1
+            if self.decreases_quality_over_time(item):
+                if item.quality > 0:
+                    self._adjust_quality(item, -1)
             else:
                 if item.quality < 50:
                     item.quality = item.quality + 1
@@ -37,10 +36,15 @@ class GildedRose(object):
                 else:
                     multiplier = 0
                     if item.quality < 50:
-                        item.quality += 1
+                        self._adjust_quality(item, 1)
                     else:
                         pass
 
+    def _adjust_quality(self, item, delta):
+        item.quality += delta
+
+    def decreases_quality_over_time(self, item):
+        return item.name not in ("Aged Brie", "Backstage passes to a TAFKAL80ETC concert", "Sulfuras, Hand of Ragnaros")
 
 class Item:
     def __init__(self, name, sell_in, quality):
