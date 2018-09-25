@@ -1,14 +1,13 @@
-﻿using System;
+﻿using Xunit;
+using System;
 using System.IO;
 using System.Text;
-using NUnit.Framework;
 
-namespace csharp
+namespace csharpcore
 {
-    [TestFixture]
     public class ApprovalTest
     {
-        [Test]
+        [Fact]
         public void ThirtyDays()
         {
             var lines = File.ReadAllLines("ThirtyDays.txt");
@@ -23,7 +22,7 @@ namespace csharp
             var outputLines = output.Split('\n');
             for(var i = 0; i<Math.Min(lines.Length, outputLines.Length); i++) 
             {
-                Assert.AreEqual(lines[i], outputLines[i]);
+                Assert.Equal(lines[i], outputLines[i]);
             }
         }
     }
