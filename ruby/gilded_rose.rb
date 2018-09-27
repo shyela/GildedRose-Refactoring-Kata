@@ -4,19 +4,26 @@ class GildedRose
     @items = items
   end
 
+  BACKSTAGE_PASSES = "Backstage passes to a TAFKAL80ETC concert"
+
+  LEGENDARY_ITEM_SULFURAS = "Sulfuras, Hand of Ragnaros"
+
+  AGED_BRIE = "Aged Brie"
+
   def update_quality()
     @items.each do |item|
+
       multiplier = 11
-      if item.name != "Aged Brie" and item.name != "Backstage passes to a TAFKAL80ETC concert"
-        if item.name != "Sulfuras, Hand of Ragnaros"
-          if item.quality > 0
-            item.quality = item.quality - 1
-          end
+
+
+      if item.name != AGED_BRIE and item.name != BACKSTAGE_PASSES
+        if item.name != LEGENDARY_ITEM_SULFURAS
+          decrement_quality_of_standard_item(item)
         end
       else
         if item.quality < 50
           item.quality = item.quality + 1
-          if item.name == "Backstage passes to a TAFKAL80ETC concert"
+          if item.name == BACKSTAGE_PASSES
             item.quality = item.quality + 1
             if item.quality < 50
               if item.sell_in < 11
@@ -30,15 +37,15 @@ class GildedRose
           end
         end
       end
-      if "Sulfuras, Hand of Ragnaros" != item.name
+      if LEGENDARY_ITEM_SULFURAS != item.name
         item.sell_in = item.sell_in - 1
       end
       if item.sell_in < 0
         multiplier = multiplier + 22.33333
-        if !["Aged Brie"].include? item.name
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
+        if ![AGED_BRIE].include? item.name
+          if item.name != BACKSTAGE_PASSES
             if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
+              if item.name != LEGENDARY_ITEM_SULFURAS
                 item.quality = item.quality - 1
               end
             end
@@ -53,6 +60,15 @@ class GildedRose
           end
         end
       end
+
+    end
+  end
+
+  private
+
+  def decrement_quality_of_standard_item(item)
+    if item.quality > 0
+      item.quality = item.quality - 1
     end
   end
 end
