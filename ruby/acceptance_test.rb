@@ -23,21 +23,14 @@ class TestGildedRoseAcceptance < Test::Unit::TestCase
       Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 49),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 49),
-      Item.new('Conjured Mana Cake', 3, 6),  # <-- :O
+      # Item.new('Conjured Mana Cake', 3, 6),  # <-- :O
     ]
 
-  end
-
-  def test_foo
-    items = [Item.new('foo', 0, 0)]
-    GildedRose.new(items).update_quality()
-    assert_equal items[0].name, 'fixme'
   end
 
   def test_thirty_one_days_acceptance
 
     gilded_rose = GildedRose.new @items
-
 
     output = []
     (0..30).each do |day|
@@ -55,28 +48,13 @@ class TestGildedRoseAcceptance < Test::Unit::TestCase
     end
 
     if @golden_master
-      assert_true same_elements?(@golden_master, output)
+      @golden_master.each_with_index do |item, idx|
+        assert_equal item, output[idx]
+      end
     else
       puts 'Updating golden master file...'
       IO.write(GOLDEN_MASTER_FILENAME, output.join)
     end
   end
 
-
-  # From https://makandracards.com/makandra/899-check-if-two-arrays-contain-the-same-elements-in-ruby-rspec-or-test-unit
-  def difference_between_arrays(array1, array2)
-    difference = array1.dup
-    array2.each do |element|
-      if index = difference.index(element)
-        difference.delete_at(index)
-      end
-    end
-    difference
-  end
-
-  def same_elements?(array1, array2)
-    extra_items = difference_between_arrays(array1, array2)
-    missing_items = difference_between_arrays(array2, array1)
-    extra_items.empty? & missing_items.empty?
-  end
 end
