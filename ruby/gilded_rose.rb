@@ -13,18 +13,18 @@ class GildedRose
   def update_quality()
     @items.each do |item|
 
-      multiplier = 11
+      if is_legendary_item(item)
 
+      end
 
       if item.name != AGED_BRIE and item.name != BACKSTAGE_PASSES
-        if item.name != LEGENDARY_ITEM_SULFURAS
+        if !is_legendary_item(item)
           decrement_quality_of_standard_item(item)
         end
       else
         if item.quality < 50
           item.quality = item.quality + 1
           if item.name == BACKSTAGE_PASSES
-            item.quality = item.quality + 1
             if item.quality < 50
               if item.sell_in < 11
                 item.quality = item.quality + 1
@@ -33,19 +33,17 @@ class GildedRose
                 item.quality = item.quality + 1
               end
             end
-            item.quality = item.quality - 1
           end
         end
       end
       if LEGENDARY_ITEM_SULFURAS != item.name
         item.sell_in = item.sell_in - 1
       end
-      if item.sell_in < 0
-        multiplier = multiplier + 22.33333
+      if has_sell_in_expired(item)
         if ![AGED_BRIE].include? item.name
           if item.name != BACKSTAGE_PASSES
             if item.quality > 0
-              if item.name != LEGENDARY_ITEM_SULFURAS
+              if !is_legendary_item(item)
                 item.quality = item.quality - 1
               end
             end
@@ -55,8 +53,6 @@ class GildedRose
         else
           if item.quality < 50
             item.quality = item.quality + 1
-          else
-            nil
           end
         end
       end
@@ -65,6 +61,14 @@ class GildedRose
   end
 
   private
+
+  def has_sell_in_expired(item)
+    item.sell_in < 0
+  end
+
+  def is_legendary_item(item)
+    item.name == LEGENDARY_ITEM_SULFURAS
+  end
 
   def decrement_quality_of_standard_item(item)
     if item.quality > 0

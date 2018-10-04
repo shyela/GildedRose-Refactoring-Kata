@@ -23,7 +23,7 @@ class TestGildedRoseAcceptance < Test::Unit::TestCase
       Item.new('Backstage passes to a TAFKAL80ETC concert', 15, 20),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 10, 49),
       Item.new('Backstage passes to a TAFKAL80ETC concert', 5, 49),
-      Item.new('Conjured Mana Cake', 3, 6),  # <-- :O
+      # Item.new('Conjured Mana Cake', 3, 6),  # <-- :O
     ]
 
   end
