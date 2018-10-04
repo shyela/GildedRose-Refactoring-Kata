@@ -10,6 +10,10 @@ class GildedRose
 
   AGED_BRIE = "Aged Brie"
 
+  FIRST_DEMAND_INCREASE = 10
+
+  SECOND_DEMAND_INCREASE = 5
+
   def update_quality()
     @items.each do |item|
 
@@ -17,44 +21,55 @@ class GildedRose
         next
       end
 
-      item.sell_in = item.sell_in - 1
+      decrement_sell_in(item)
 
-      if gets_better_with_time(item)
+      if gets_worse_with_time(item)
         decrement_quality(item)
       else
         increment_quality(item)
         if is_backstage_pass(item)
-          if item.sell_in < 10
+          if item.sell_in < FIRST_DEMAND_INCREASE
             increment_quality(item)
           end
-          if item.sell_in < 5
+          if item.sell_in < SECOND_DEMAND_INCREASE
             increment_quality(item)
           end
         end
       end
 
       if has_sell_in_expired(item)
-        if item.name != AGED_BRIE
-          if item.name != BACKSTAGE_PASSES
-            decrement_quality(item)
-          else
-            item.quality = 0
-          end
-        else
+        if is_aged_brie(item)
           increment_quality(item)
+        elsif is_backstage_pass(item)
+          item.quality = 0
+        else
+          decrement_quality(item)
         end
       end
+
     end
   end
 
   private
 
+  def is_aged_brie(item)
+    item.name == AGED_BRIE
+  end
+
   def is_backstage_pass(item)
     item.name == BACKSTAGE_PASSES
   end
 
-  def gets_better_with_time(item)
-    item.name != AGED_BRIE and !is_backstage_pass(item)
+  def is_legendary_item(item)
+    item.name == LEGENDARY_ITEM_SULFURAS
+  end
+
+  def decrement_sell_in(item)
+    item.sell_in = item.sell_in - 1
+  end
+
+  def gets_worse_with_time(item)
+    !is_aged_brie(item) and !is_backstage_pass(item)
   end
 
   def increment_quality(item)
@@ -65,10 +80,6 @@ class GildedRose
 
   def has_sell_in_expired(item)
     item.sell_in < 0
-  end
-
-  def is_legendary_item(item)
-    item.name == LEGENDARY_ITEM_SULFURAS
   end
 
   def decrement_quality(item)
