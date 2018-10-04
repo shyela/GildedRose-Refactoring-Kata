@@ -23,25 +23,31 @@ class GildedRose
 
       decrement_sell_in(item)
 
+      if is_backstage_pass(item)
+        increment_quality(item)
+        if item.sell_in < FIRST_DEMAND_INCREASE
+          increment_quality(item)
+        end
+        if item.sell_in < SECOND_DEMAND_INCREASE
+          increment_quality(item)
+        end
+
+        if has_sell_in_expired(item)
+          item.quality = 0
+        end
+
+        next
+      end
+
       if gets_worse_with_time(item)
         decrement_quality(item)
       else
         increment_quality(item)
-        if is_backstage_pass(item)
-          if item.sell_in < FIRST_DEMAND_INCREASE
-            increment_quality(item)
-          end
-          if item.sell_in < SECOND_DEMAND_INCREASE
-            increment_quality(item)
-          end
-        end
       end
 
       if has_sell_in_expired(item)
         if is_aged_brie(item)
           increment_quality(item)
-        elsif is_backstage_pass(item)
-          item.quality = 0
         else
           decrement_quality(item)
         end
